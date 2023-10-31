@@ -33,18 +33,22 @@ export default function App() {
     async function createNewNote() {
         const newNote = {
             body: "# Type your markdown note's title here",
+            createAt: Date.now(),
+            updatedAt: Date.now(),
         };
         const newNoteRef = await addDoc(notesCollection, newNote);
-        setCurrentNoteId(newNote.id);
+        setCurrentNoteId(newNoteRef.id);
     }
 
     const currentNote = notes.find((note) => note.id === currentNoteId) || notes[0];
+
+    const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt);
 
     // Update Note
 
     async function updateNote(text) {
         const docRef = doc(db, 'notes', currentNoteId);
-        await setDoc(docRef, { body: text }, { merge: true });
+        await setDoc(docRef, { body: text, updatedAt: Date.now() }, { merge: true });
     }
 
     // Delete Note
@@ -59,7 +63,7 @@ export default function App() {
             {notes.length > 0 ? (
                 <Split sizes={[30, 70]} direction="horizontal" className="split">
                     <Sidebar
-                        notes={notes}
+                        notes={sortedNotes}
                         currentNote={currentNote}
                         setCurrentNoteId={setCurrentNoteId}
                         newNote={createNewNote}
