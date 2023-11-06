@@ -13,7 +13,6 @@ export default function App() {
     const [tempNoteText, setTempNoteText] = React.useState('');
 
     const currentNote = notes.find((note) => note.id === currentNoteId) || notes[0];
-
     const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt);
 
     //useEffects
@@ -25,6 +24,7 @@ export default function App() {
                 id: doc.id,
             }));
             setNotes(notesArray);
+            console.log(notesArray);
         });
         return unSubscribe;
     }, []);
@@ -63,7 +63,7 @@ export default function App() {
         return () => clearTimeout(timeoutId);
     }, [tempNoteText]);
 
-    // Update Note
+    // Update Noteno
 
     async function updateNote(text) {
         const docRef = doc(db, 'notes', currentNoteId);
